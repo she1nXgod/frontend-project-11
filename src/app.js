@@ -1,7 +1,8 @@
 import * as yup from 'yup';
 import i18n from 'i18next';
 import resources from './locales/index.js';
-import { loadTranslations, renderFeedback } from './ui.js';
+import { loadTranslations, renderFeedback, renderFeed } from './ui.js';
+import { parseRss } from './rss.js';
 
 export default () => {
   const state = {
@@ -10,6 +11,10 @@ export default () => {
       status: 'pending', // 'sending', 'success',
       error: '',
     },
+    urls: [],
+    posts: [],
+    feeds: [],
+    descriptions: [],
   };
 
   const i18nInstance = i18n.createInstance();
@@ -19,12 +24,14 @@ export default () => {
     resources,
   });
 
-  const schema = yup.string().url().required();
+  const schema = yup.string().url('invalidURL').required('required');
 
   const elements = {
     form: document.querySelector('form'),
     input: document.querySelector('#url-input'),
     feedback: document.querySelector('.feedback'),
+    feeds: document.querySelector('.feeds'),
+    posts: document.querySelector('.posts'),
     common: {
       title: document.querySelector('h1'),
       description: document.querySelector('.lead'),
@@ -42,25 +49,34 @@ export default () => {
     const formData = new FormData(event.target);
     const value = formData.get('url').trim();
 
+    state.form.value = value;
+
     schema
-      .validate(value, { abortEarly: false })
+      .validate(state.form.value, { abortEarly: false })
       .then(() => {
-        if (state.form.value === value) {
+        elements.common.submitAddBtn.disabled = true;
+
+        if (state.urls.includes(state.form.value)) {
           state.form.error = 'repeatedURL';
           renderFeedback(state, elements, i18nInstance);
-          return;
+          throw new Error('repeatedURL');
         }
-        state.form.status = 'sending';
+        return parseRss(state);
+      })
+      .then(() => {
+        state.urls.push(state.form.value);
         state.form.error = '';
         renderFeedback(state, elements, i18nInstance);
+        renderFeed(state, elements, i18nInstance);
+        console.log(state.posts);
       })
-      .catch(() => {
-        state.form.error = 'invalidURL';
-        state.form.status = 'pending';
+      .catch((error) => {
+        console.error('err: ', error);
+        state.form.error = error.message;
         renderFeedback(state, elements, i18nInstance);
       })
       .finally(() => {
-        state.form.value = value;
+        elements.common.submitAddBtn.disabled = false;
       });
   });
 

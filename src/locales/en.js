@@ -10,9 +10,14 @@ export default {
       errors: {
         invalidURL: 'The link must be a valid URL',
         repeatedURL: 'RSS already exists',
+        networkError: 'Network error',
+        invalidRSS: 'The resource does not contain a valid RSS feed',
       },
     },
     modalFullArticleBtn: 'Read full article',
     modalCloseBtn: 'Close',
+    feedsCardTitle: 'Feeds',
+    postsCardTitle: 'Posts',
+    postsCardBtn: 'View',
   },
 };

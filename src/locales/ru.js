@@ -10,9 +10,14 @@ export default {
       errors: {
         invalidURL: 'Ссылка должна быть валидным URL',
         repeatedURL: 'RSS уже существует',
+        networkError: 'Ошибка сети',
+        invalidRSS: 'Ресурс не содержит валидный RSS',
       },
     },
     modalFullArticleBtn: 'Читать полностью',
     modalCloseBtn: 'Закрыть',
+    feedsCardTitle: 'Фиды',
+    postsCardTitle: 'Посты',
+    postsCardBtn: 'Просмотр',
   },
 };
