@@ -11,7 +11,7 @@ export default () => {
       error: '',
     },
     guids: new Set(),
-    urls: [],
+    urls: new Set(),
     posts: [],
     feeds: [],
     descriptions: [],
@@ -56,7 +56,7 @@ export default () => {
       .then(() => {
         elements.common.submitAddBtn.disabled = true;
 
-        if (state.urls.includes(state.form.value)) {
+        if (state.urls.has(state.form.value)) {
           state.form.error = 'repeatedURL';
           renderFeedback(state, elements, i18nInstance);
           throw new Error('repeatedURL');
@@ -64,12 +64,12 @@ export default () => {
         return getRss(state);
       })
       .then(() => {
-        state.urls.push(state.form.value);
+        state.urls.add(state.form.value);
         state.form.error = '';
         renderFeedback(state, elements, i18nInstance);
         renderRssContent(state, elements, i18nInstance);
 
-        const lastUrl = state.urls.at(-1);
+        const lastUrl = Array.from(state.urls).at(-1);
         rssPostsUpdate(state, elements, i18nInstance, lastUrl, 5000);
       })
       .catch((error) => {

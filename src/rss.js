@@ -44,7 +44,7 @@ function getRss(state) {
     .then((response) => {
       const data = response.data.contents;
 
-      const { posts, feed, description, guids } = parseRss(data, state);
+      const { posts, feed, description, guids } = parseRss(data);
       state.posts.push(posts);
       state.feeds.push(feed);
       state.descriptions.push(description);
@@ -66,7 +66,7 @@ function rssPostsUpdate(state, elements, i18n, url, timeout = 5000) {
       .then((response) => {
         const data = response.data.contents;
 
-        const { posts } = parseRss(data, state);
+        const { posts } = parseRss(data);
         const newPost = posts.filter(({ guid }) => !state.guids.has(guid));
 
         if (newPost.length > 0) {
