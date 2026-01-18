@@ -10,6 +10,7 @@ export default () => {
       value: null,
       error: '',
     },
+    guids: new Set(),
     urls: [],
     posts: [],
     feeds: [],

@@ -103,8 +103,7 @@ function renderPosts(state, elements, i18n) {
     listItemLink.addEventListener('click', (event) => {
       const target = event.target;
       target.classList.remove('fw-bold');
-      target.classList.add('fw-normal');
-      target.classList.add('link-secondary');
+      target.classList.add('fw-normal', 'link-secondary');
     });
 
     listGroupItem.append(listItemLink, listItemButton);
