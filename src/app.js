@@ -1,14 +1,13 @@
 import * as yup from 'yup';
 import i18n from 'i18next';
 import resources from './locales/index.js';
-import { loadTranslations, renderFeedback, renderFeed } from './ui.js';
-import { parseRss } from './rss.js';
+import { loadTranslations, renderFeedback, renderRssContent } from './ui.js';
+import { getRss, rssPostsUpdate } from './rss.js';
 
 export default () => {
   const state = {
     form: {
       value: null,
-      status: 'pending', // 'sending', 'success',
       error: '',
     },
     urls: [],
@@ -61,14 +60,16 @@ export default () => {
           renderFeedback(state, elements, i18nInstance);
           throw new Error('repeatedURL');
         }
-        return parseRss(state);
+        return getRss(state);
       })
       .then(() => {
         state.urls.push(state.form.value);
         state.form.error = '';
         renderFeedback(state, elements, i18nInstance);
-        renderFeed(state, elements, i18nInstance);
-        console.log(state.posts);
+        renderRssContent(state, elements, i18nInstance);
+
+        const lastUrl = state.urls.at(-1);
+        rssPostsUpdate(state, elements, i18nInstance, lastUrl, 5000);
       })
       .catch((error) => {
         console.error('err: ', error);

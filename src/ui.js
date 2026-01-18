@@ -42,12 +42,11 @@ function renderRssLayout(elements, i18n, feedsOrPosts) {
   elements[feedsOrPosts].append(card);
 }
 
-function renderFeed(state, elements, i18n) {
+function renderFeeds(state, elements, i18n) {
   if (elements.feeds.childNodes.length === 0) {
     renderRssLayout(elements, i18n, 'feeds');
   }
 
-  //feeds
   const listGroupFeeds = document.getElementById('list-group-feeds');
 
   const listGroupItem = document.createElement('li');
@@ -63,14 +62,15 @@ function renderFeed(state, elements, i18n) {
 
   listGroupItem.append(listItemName, listItemDescription);
   listGroupFeeds.prepend(listGroupItem);
+}
 
-  //posts
+function renderPosts(state, elements, i18n) {
   if (elements.posts.childNodes.length === 0) {
     renderRssLayout(elements, i18n, 'posts');
   }
   const listGroupPosts = document.getElementById('list-group-posts');
 
-  state.posts.at(-1).forEach(({ title, link }) => {
+  state.posts.at(-1).forEach(({ title, link, id }) => {
     const listGroupItem = document.createElement('li');
     const listItemLink = document.createElement('a');
     const listItemButton = document.createElement('button');
@@ -81,28 +81,40 @@ function renderFeed(state, elements, i18n) {
       'justify-content-between',
       'align-items-start',
       'border-0',
-      'border-end-0'
+      'border-end-0',
     );
 
     listItemLink.classList.add('fw-bold');
     listItemButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
 
     listItemLink.href = link;
-    // listItemLink.dataset.id = id
+    listItemLink.dataset.id = id;
     listItemLink.target = '_blank';
     listItemLink.rel = 'noopener noreferrer';
 
     listItemButton.type = 'button';
-    // listItemButton.dataset.id = id
+    listItemButton.dataset.id = id;
     listItemButton.dataset.bsToggle = 'modal';
     listItemButton.dataset.bsTarget = '#modal';
 
     listItemLink.textContent = title;
     listItemButton.textContent = i18n.t('postsCardBtn');
 
+    listItemLink.addEventListener('click', (event) => {
+      const target = event.target;
+      target.classList.remove('fw-bold');
+      target.classList.add('fw-normal');
+      target.classList.add('link-secondary');
+    });
+
     listGroupItem.append(listItemLink, listItemButton);
     listGroupPosts.prepend(listGroupItem);
   });
 }
 
-export { loadTranslations, renderFeedback, renderFeed };
+function renderRssContent(state, elements, i18n) {
+  renderFeeds(state, elements, i18n);
+  renderPosts(state, elements, i18n);
+}
+
+export { loadTranslations, renderFeedback, renderPosts, renderRssContent };
