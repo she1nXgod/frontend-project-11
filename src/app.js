@@ -1,7 +1,14 @@
 import * as yup from 'yup';
 import i18n from 'i18next';
 import resources from './locales/index.js';
-import { loadTranslations, renderFeedback, renderPosts, renderRssContent, renderReadAsPost } from './ui.js';
+import {
+  loadTranslations,
+  renderFeedback,
+  renderPosts,
+  renderRssContent,
+  renderReadAsPost,
+  renderModal,
+} from './ui.js';
 import { getRss, rssPostsUpdate } from './rss.js';
 
 export default () => {
@@ -34,6 +41,9 @@ export default () => {
     feeds: document.querySelector('.feeds'),
     posts: document.querySelector('.posts'),
     modal: document.querySelector('#modal'),
+    modalTitle: document.querySelector('.modal-title'),
+    modalBody: document.querySelector('.modal-body'),
+    modalBtnFullArticle: document.querySelector('.full-article'),
     common: {
       title: document.querySelector('h1'),
       description: document.querySelector('.lead'),
@@ -49,12 +59,21 @@ export default () => {
     const link = event.target.closest('a[data-id], button[data-id]');
     if (!link) return;
 
-    const id = link.dataset.id;
+    const postId = link.dataset.id;
 
-    if (!state.readPostsId.has(id)) {
-      state.readPostsId.add(id);
-      renderReadAsPost(elements, id);
+    if (!state.readPostsId.has(postId)) {
+      state.readPostsId.add(postId);
+      renderReadAsPost(elements, postId);
     }
+  });
+
+  elements.posts.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-id]');
+    if (!button) return;
+
+    const postId = button.dataset.id;
+
+    renderModal(state, elements, postId);
   });
 
   elements.form.addEventListener('submit', (event) => {

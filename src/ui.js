@@ -116,11 +116,19 @@ function renderRssContent(state, elements, i18n) {
   renderPosts(state, elements, i18n);
 }
 
-function renderReadAsPost(elements, id) {
-  const link = elements.posts.querySelector(`a[data-id="${id}"]`);
+function renderReadAsPost(elements, postId) {
+  const link = elements.posts.querySelector(`a[data-id="${postId}"]`);
 
   link.classList.remove('fw-bold');
   link.classList.add('fw-normal', 'link-secondary');
 }
 
-export { loadTranslations, renderFeedback, renderPosts, renderRssContent, renderReadAsPost };
+function renderModal(state, elements, postId) {
+  const [{ description, link, title }] = state.posts.flat().filter(({ id }) => id === postId);
+
+  elements.modalTitle.textContent = title;
+  elements.modalBody.textContent = description;
+  elements.modalBtnFullArticle.href = link;
+}
+
+export { loadTranslations, renderFeedback, renderPosts, renderRssContent, renderReadAsPost, renderModal };
