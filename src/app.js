@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import i18n from 'i18next';
 import resources from './locales/index.js';
-import { loadTranslations, renderFeedback, renderRssContent } from './ui.js';
+import { loadTranslations, renderFeedback, renderPosts, renderRssContent, renderReadAsPost } from './ui.js';
 import { getRss, rssPostsUpdate } from './rss.js';
 
 export default () => {
@@ -13,6 +13,7 @@ export default () => {
     guids: new Set(),
     urls: new Set(),
     posts: [],
+    readPostsId: new Set(),
     feeds: [],
     descriptions: [],
   };
@@ -32,6 +33,7 @@ export default () => {
     feedback: document.querySelector('.feedback'),
     feeds: document.querySelector('.feeds'),
     posts: document.querySelector('.posts'),
+    modal: document.querySelector('#modal'),
     common: {
       title: document.querySelector('h1'),
       description: document.querySelector('.lead'),
@@ -42,6 +44,18 @@ export default () => {
       modalCloseBtn: document.querySelector('button[class="btn btn-secondary"]'),
     },
   };
+
+  elements.posts.addEventListener('click', (event) => {
+    const link = event.target.closest('a[data-id], button[data-id]');
+    if (!link) return;
+
+    const id = link.dataset.id;
+
+    if (!state.readPostsId.has(id)) {
+      state.readPostsId.add(id);
+      renderReadAsPost(elements, id);
+    }
+  });
 
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -70,7 +84,7 @@ export default () => {
         renderRssContent(state, elements, i18nInstance);
 
         const lastUrl = Array.from(state.urls).at(-1);
-        rssPostsUpdate(state, elements, i18nInstance, lastUrl, 5000);
+        rssPostsUpdate(state, lastUrl, 5000, () => renderPosts(state, elements, i18nInstance));
       })
       .catch((error) => {
         console.error('err: ', error);

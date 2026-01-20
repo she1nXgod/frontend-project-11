@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import axios from 'axios';
-import { renderPosts } from './ui.js';
 
 function buildProxyUrl(url) {
   return `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`;
@@ -59,7 +58,7 @@ function getRss(state) {
     });
 }
 
-function rssPostsUpdate(state, elements, i18n, url, timeout = 5000) {
+function rssPostsUpdate(state, url, timeout = 5000, onNewPosts = () => {}) {
   function tick() {
     axios
       .get(buildProxyUrl(url), { timeout: 10000 })
@@ -67,12 +66,12 @@ function rssPostsUpdate(state, elements, i18n, url, timeout = 5000) {
         const data = response.data.contents;
 
         const { posts } = parseRss(data);
-        const newPost = posts.filter(({ guid }) => !state.guids.has(guid));
+        const newPosts = posts.filter(({ guid }) => !state.guids.has(guid));
 
-        if (newPost.length > 0) {
-          state.posts.push(newPost);
-          newPost.forEach(({ guid }) => state.guids.add(guid));
-          renderPosts(state, elements, i18n);
+        if (newPosts.length > 0) {
+          state.posts.push(newPosts);
+          newPosts.forEach(({ guid }) => state.guids.add(guid));
+          onNewPosts();
         }
       })
       .catch((err) => {

@@ -116,4 +116,11 @@ function renderRssContent(state, elements, i18n) {
   renderPosts(state, elements, i18n);
 }
 
-export { loadTranslations, renderFeedback, renderPosts, renderRssContent };
+function renderReadAsPost(elements, id) {
+  const link = elements.posts.querySelector(`a[data-id="${id}"]`);
+
+  link.classList.remove('fw-bold');
+  link.classList.add('fw-normal', 'link-secondary');
+}
+
+export { loadTranslations, renderFeedback, renderPosts, renderRssContent, renderReadAsPost };
