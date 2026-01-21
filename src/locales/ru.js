@@ -20,4 +20,4 @@ export default {
     postsCardTitle: 'Посты',
     postsCardBtn: 'Просмотр',
   },
-};
+}
