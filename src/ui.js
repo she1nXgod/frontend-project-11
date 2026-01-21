@@ -100,12 +100,6 @@ function renderPosts(state, elements, i18n) {
     listItemLink.textContent = title;
     listItemButton.textContent = i18n.t('postsCardBtn');
 
-    listItemLink.addEventListener('click', (event) => {
-      const target = event.target;
-      target.classList.remove('fw-bold');
-      target.classList.add('fw-normal', 'link-secondary');
-    });
-
     listGroupItem.append(listItemLink, listItemButton);
     listGroupPosts.prepend(listGroupItem);
   });
@@ -118,13 +112,13 @@ function renderRssContent(state, elements, i18n) {
 
 function renderReadAsPost(elements, postId) {
   const link = elements.posts.querySelector(`a[data-id="${postId}"]`);
-
+  console.log(link);
   link.classList.remove('fw-bold');
   link.classList.add('fw-normal', 'link-secondary');
 }
 
 function renderModal(state, elements, postId) {
-  const [{ description, link, title }] = state.posts.flat().filter(({ id }) => id === postId);
+  const { description, link, title } = state.posts.flat().find(({ id }) => id === postId);
 
   elements.modalTitle.textContent = title;
   elements.modalBody.textContent = description;

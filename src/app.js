@@ -56,24 +56,29 @@ export default () => {
   };
 
   elements.posts.addEventListener('click', (event) => {
-    const link = event.target.closest('a[data-id], button[data-id]');
-    if (!link) return;
+    const target = event.target;
+    const link = target.closest('a[data-id]');
+    const button = target.closest('button[data-id]');
 
-    const postId = link.dataset.id;
+    if (link) {
+      const postId = link.dataset.id;
 
-    if (!state.readPostsId.has(postId)) {
-      state.readPostsId.add(postId);
-      renderReadAsPost(elements, postId);
+      if (!state.readPostsId.has(postId)) {
+        state.readPostsId.add(postId);
+        renderReadAsPost(elements, postId);
+      }
     }
-  });
 
-  elements.posts.addEventListener('click', (event) => {
-    const button = event.target.closest('button[data-id]');
-    if (!button) return;
+    if (button) {
+      const postId = button.dataset.id;
 
-    const postId = button.dataset.id;
+      if (!state.readPostsId.has(postId)) {
+        state.readPostsId.add(postId);
+        renderReadAsPost(elements, postId);
+      }
 
-    renderModal(state, elements, postId);
+      renderModal(state, elements, postId);
+    }
   });
 
   elements.form.addEventListener('submit', (event) => {
