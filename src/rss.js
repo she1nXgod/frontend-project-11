@@ -55,7 +55,8 @@ function getRss(state) {
       state.posts.push(posts)
       state.feeds.push(feed)
       state.descriptions.push(description)
-      guids.forEach((guid) => state.guids.add(guid))
+      // eslint-disable-next-line
+      guids.forEach(guid => state.guids.add(guid))
     })
     .catch((error) => {
       if (error.message === 'invalidRSS') {
