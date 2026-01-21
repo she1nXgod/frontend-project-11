@@ -9,13 +9,21 @@ function parseRss(data) {
   const parser = new DOMParser();
   const parsedData = parser.parseFromString(data, 'application/xml');
 
-  const feed = parsedData.querySelector('title').textContent;
-  const description = parsedData.querySelector('description').textContent;
-  const items = parsedData.querySelectorAll('item');
-
-  if (feed === 'Error') {
+  const parserError = parsedData.querySelector('parsererror');
+  if (parserError) {
     throw new Error('invalidRSS');
   }
+
+  const feedElement = parsedData.querySelector('title');
+  const descriptionElement = parsedData.querySelector('description');
+
+  if (!feedElement || !descriptionElement) {
+    throw new Error('invalidRSS');
+  }
+  const feed = feedElement.textContent;
+  const description = descriptionElement.textContent;
+  const items = parsedData.querySelectorAll('item');
+
   const guids = [];
   const posts = Array.from(items).map((item) => {
     const title = item.querySelector('title');
