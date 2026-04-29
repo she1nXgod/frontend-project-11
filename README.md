@@ -35,7 +35,7 @@ RSS feed aggregator built with vanilla JavaScript. Add your favorite RSS feeds a
 git clone https://github.com/she1nXgod/frontend-project-11.git
 
 # Navigate to project directory
-cd frontend-project-11
+cd RSS-aggregator
 
 # Install dependencies
 npm install
