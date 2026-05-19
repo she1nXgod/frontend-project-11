@@ -32,7 +32,7 @@ RSS feed aggregator built with vanilla JavaScript. Add your favorite RSS feeds a
 
 ```bash
 # Clone the repository
-git clone https://github.com/she1nXgod/frontend-project-11.git
+git clone https://github.com/she1nXgod/RSS-aggregator.git
 
 # Navigate to project directory
 cd RSS-aggregator
